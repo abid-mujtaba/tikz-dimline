@@ -1,6 +1,10 @@
-[![Tweet this](http://img.shields.io/badge/%20-Tweet-00aced.svg)](https://twitter.com/intent/tweet?text=Draw%20technical%20dimension%20lines%20with%20%23TikZ%20and%20%23LaTeX&tw_p=tweetbutton&via=renard_0)
-[![Follow me on twitter](http://img.shields.io/badge/Twitter-Follow-00aced.svg)](https://twitter.com/intent/follow?region=follow_link&screen_name=renard_0&tw_p=followbutton)
+# Note
 
+This is a forked project. The major modifications done is to introduce ``offset``, ``delta`` and ``show extensions`` variables to ``dimline``. With these variables the dimension line is now drawn offset by the amount specified from the position provided. This allows one to draw the dimension line by specifying not its location but the location of the object which is being measured. The extensions have been turned off by default and can be turned on by setting ``show extensions`` to ``true``.
+
+The variables ``extension start length`` and ``extension end length`` are now ignored and ``offset`` and ``delta`` are used instead.
+
+The remainder of the docs below are unmodified. 
 
 # Technical dimension lines in Tikz
 

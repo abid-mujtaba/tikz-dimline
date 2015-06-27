@@ -1,4 +1,8 @@
 %% Dimension line for LaTeX/TikZ
+%%
+%% Secondary Author: Abid H. Mujtaba (2015-06-27)
+%%
+%% Primary source: https://github.com/renard/tikz-dimline
 %% Copyright © 2013 Sébastien Gross  <seb•ɑƬ•chezwam•ɖɵʈ•org>
 %%
 %% This file may be distributed and/or modified
@@ -109,6 +113,9 @@
       dimline/.is family,
       dimline,
       color/.initial = black,
+      offset/.initial=1cm,                       % The offset defines how far away we want the dimline from the specified points
+      delta/.initial=0cm,                        % The offset of the start of the extension from the original/anchor points
+      show extensions/.initial=false,
       extension start length/.initial=1cm,
       extension end length/.initial=1cm,
       extension start angle/.initial=-90,
@@ -154,28 +161,41 @@
       },
       ]
 
-      \coordinate (a) at #2 {};
+      \coordinate (a) at #2 {};     % Starting and ending points with reference to which the dimline will be drawn with a parallel offset of 'offset' units
       \coordinate (b) at #3 {};
 
-      \ifthenelse{\equal{\dimline@extension@start@path}{}}{
-        \coordinate (a to b) at ($(a)!\pgfkeysvalueof{/dimline/extension start length}!\pgfkeysvalueof{/dimline/extension start angle}:(b)$);
-        \draw [extension start] (a.center) -- (a to b);
-      } {
-        \draw [extension start] plot coordinates {\dimline@extension@start@path};
-      }
+      %\ifthenelse{\equal{\dimline@extension@start@path}{}}{
+        %\coordinate (a to b) at ($(a)!\pgfkeysvalueof{/dimline/extension start length}!\pgfkeysvalueof{/dimline/extension start angle}:(b)$);
+        %%\draw [extension start] (a.center) -- (a to b);
+      %} {
+        %%\draw [extension start] plot coordinates {\dimline@extension@start@path};
+      %}
 
-      \ifthenelse{\equal{\dimline@extension@end@path}{}}{
-        \coordinate (b to a) at ($(b)!\pgfkeysvalueof{/dimline/extension end length}!\pgfkeysvalueof{/dimline/extension end angle}:(a)$);
-        \draw [extension end] (b.center) -- (b to a);
-      } {
-        \draw [extension end] plot coordinates {\dimline@extension@end@path};
-      }
+      %\ifthenelse{\equal{\dimline@extension@end@path}{}}{
+        %\coordinate (b to a) at ($(b)!\pgfkeysvalueof{/dimline/extension end length}!\pgfkeysvalueof{/dimline/extension end angle}:(a)$);
+        %%\draw [extension end] (b.center) -- (b to a);
+      %} {
+        %%\draw [extension end] plot coordinates {\dimline@extension@end@path};
+      %}
 
-      \draw[line] (a.center) -- (b.center) node[label] {#4};
+      % Calculate the offset coordinates of the dimline (start: da, end: db)
+       \coordinate (da) at ($(a)!\pgfkeysvalueof{/dimline/offset}!\pgfkeysvalueof{/dimline/extension start angle}:(b)$);
+       \coordinate (db) at ($(b)!\pgfkeysvalueof{/dimline/offset}!\pgfkeysvalueof{/dimline/extension end angle}:(a)$);
+
+       \ifthenelse{\equal{\pgfkeysvalueof{/dimline/show extensions}}{true}}{        % If the 'show extensions' flag/key is set to true we draw the extensions
+
+           % Calculate the delta offset coordinates of the ends of the extension lines (start extension: oa, end extension: ob)
+          \coordinate (oa) at ($(da)!\pgfkeysvalueof{/dimline/delta}!\pgfkeysvalueof{/dimline/extension start angle}:(db)$);
+          \coordinate (ob) at ($(db)!\pgfkeysvalueof{/dimline/delta}!\pgfkeysvalueof{/dimline/extension end angle}:(da)$);
+
+          \draw [extension start] (oa) -- (da);
+          \draw [extension start] (ob) -- (db);
+       }{}
+
+      \draw[line] (da) -- (db) node[label] {#4};
     \end{scope}
   }
 }
-
 
 
 \@ifclassloaded{beamer}{%
@@ -185,5 +205,4 @@
 
 
 \endinput
-%% tikz-dimline.sty ends here.
 
